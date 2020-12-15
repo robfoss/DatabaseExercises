@@ -9,7 +9,9 @@ const PORT = 3030;
 const HOST = '127.0.0.1';
 
 const Sequelize = require('sequelize');
-const { User } = require('./models');
+// const { User } = require('./models');
+const controllers = require('./controllers/controllers');
+
 
 app.use(
 	express.urlencoded({
@@ -21,58 +23,13 @@ app.engine("html", es6Renderer);
 app.set("views", "templates");
 app.set("view engine", "html");
 
-app.get('/', (req, res) => {
-    res.render('home', {
-        locals: {
-            title: 'Welcome Page'
-        },
-        partials: {
-            header: '/partials/header',
-            footer: '/partials/footer'
-        }
-    })
-});
+app.get('/', controllers.home);
 
-app.get('/form', (req, res) => {
-    res.render('form', {
-        locals: {
-            title: 'Form Page',
-        },
-        partials: {
-            header: '/partials/header',
-            footer: '/partials/footer',
-        }
-    });
-});
+app.get('/form', controllers.newForm);
 
-app.post('/form', async (req, res) => {
-    const { name, age, email } = req.body;
-    const newUser = await User.create({
-        name,
-        age,
-        email
-    });
-    res.redirect('/thankyou');
-})
+app.post('/form', controllers.postForm);
 
-app.get('/thankyou', async (req, res) => {
-    const user = await User.findAll();
-    res.render('thankyou', {
-        locals: {
-            title: 'Thank You',
-            user,
-        },
-        partials: {
-            header: '/partials/header',
-            footer: '/partials/footer'
-        }
-    })
-})
-
-
-
-
-
+app.get('/thankyou', controllers.thankyou);
 
 
 
